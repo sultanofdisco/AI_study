@@ -4,7 +4,9 @@ from pathlib import Path
 
 mcp = FastMCP("My FastMCP Server")
 
-BASE_DIR = Path("C:\\Users\\user\\OneDrive\\문서").absolute()
+#BASE_DIR = Path("C:\\Users\\user\\OneDrive\\문서").absolute()
+BASE_DIR = Path("C:\\Users\\user\\my-mcp-server\\my-mcp-server").absolute()
+
 BASE_DIR.mkdir(exist_ok=True)
 
 # 2. 도구 정의 (Tools)
@@ -19,7 +21,7 @@ def list_files(relative_path: str = ".") -> list[str]:
 
 @mcp.tool()
 def read_file(file_path: str) -> str:
-    """파일의 내용을 읽어옵니다."""
+    """텍스트 파일의 내용을 읽어옵니다."""
     target_path = (BASE_DIR / file_path).resolve()
     return target_path.read_text(encoding="utf-8")
 
@@ -29,6 +31,15 @@ def write_file(file_path: str, content: str) -> str:
     target_path = (BASE_DIR / file_path).resolve()
     target_path.write_text(content, encoding="utf-8")
     return f"파일 저장 완료: {file_path}"
+
+@mcp.tool()
+def create_markdown_file(file_name: str, content: str) -> str:
+    """새로운 마크다운(.md) 파일을 생성하고 내용을 작성합니다."""
+    if not file_name.endswith(".md"):
+        file_name += ".md"
+    target_path = (BASE_DIR / file_name).resolve()
+    target_path.write_text(content, encoding="utf-8")
+    return f"마크다운 파일 생성 완료: {file_name}"
 
 # 3. 실행 (Stdio 모드)
 if __name__ == "__main__":
